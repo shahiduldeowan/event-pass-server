@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const healthCheck = async (req, res) => {
   try {
+    logger.info("Health check successful");
     res
       .status(200)
       .json(new ApiResponse(200, "OK", "Server is up and running"));
