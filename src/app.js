@@ -16,9 +16,11 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+import healthCheckRouter from "./routes/healthCheckRoutes.js";
+import invitationRouter from "./routes/invitationRoutes.js";
+
+app.use("/api/v1/healthcheck", healthCheckRouter);
+app.use("/api/v1/invitation", invitationRouter);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
