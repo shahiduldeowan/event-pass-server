@@ -14,23 +14,22 @@ const excelFilePath = resolve(
 
 const generateAndAppendExcelFile = async (currentDate, message) => {
   try {
-    let workbook;
     if (fse.existsSync(excelFilePath)) {
-      workbook = new ExcelJS.Workbook();
+      const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.readFile(excelFilePath);
-    } else {
-      workbook = new ExcelJS.Workbook();
-      workbook.addWorksheet("Data").columns = [
-        { header: "Date", key: "date", width: 20 },
-        { header: "Name", key: "name", width: 20 },
-      ];
+      const worksheet = workbook.getWorksheet(1);
+      worksheet.addRow([currentDate, message]);
+      await workbook.xlsx.writeFile(excelFilePath);
+      return;
     }
 
-    const worksheet =
-      workbook.getWorksheet("Data") || workbook.addWorksheet("Data");
-
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Data");
+    worksheet.columns = [
+      { header: "Date", key: "date", width: 20 },
+      { header: "Name", key: "name", width: 20 },
+    ];
     worksheet.addRow({ date: currentDate, name: message });
-
     await workbook.xlsx.writeFile(excelFilePath);
   } catch (error) {
     logger.error(error.message);
